@@ -1,31 +1,23 @@
 language: python
 python:
     - '2.7'
-    - 'pypy'
-    - '3.5'
-    - '3.5-dev'
     - '3.6'
-    - '3.6-dev'
-    - '3.7-dev'
+    - '3.7'
     - 'nightly'
-    - 'pypy3'
+dist: xenial
 env:
-    - DJANGO_VERSION=1.11.13
-    - DJANGO_VERSION=2.0.6
+    - DJANGO_VERSION=1.11.17
+    - DJANGO_VERSION=2.1.4
 matrix:
     allow_failures:  # allow failures for non-released versions
-        - python: '3.7-dev'
         - python: 'nightly'
     exclude:  # Django 2 does not support Python 2.x
         - python: '2.7'
-          env: DJANGO_VERSION=2.0.6
-        - python: 'pypy'
-          env: DJANGO_VERSION=2.0.6
+          env: DJANGO_VERSION=2.1.4
 install:
     - travis_retry pip install django==$DJANGO_VERSION
     - travis_retry pip install gevent
-    - if [[ $TRAVIS_PYTHON_VERSION == 'pypy'* ]]; then travis_retry pip install psycopg2cffi>=2.7; fi
-    - if [[ $TRAVIS_PYTHON_VERSION != 'pypy'* ]]; then travis_retry pip install psycopg2-binary; fi
+    - travis_retry pip install psycopg2-binary
     - python setup.py -q install
 script:
     - python runtests.py
